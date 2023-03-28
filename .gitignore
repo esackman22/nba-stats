@@ -4,3 +4,5 @@
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/modules.xml
 /.idea/nba-data-pipeline.iml
+/games
+/.idea/vcs.xml
