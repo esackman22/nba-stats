@@ -1,6 +1,7 @@
 from nba_api.stats.endpoints import leaguegamefinder
 from nba_api.stats.library.parameters import SeasonTypeAllStarNullable
 import pandas as pd
+from connect import Connector
 
 
 class Games:
@@ -17,7 +18,6 @@ class Games:
         self.to_date = to_date
         self.season_type = season_type
         self.league_id = league_id
-        self.data = pd.DataFrame()
 
     def _create_game_finder(self):
         """Instantiates the LeagueGameFinderClass with the instance variables filled in.
@@ -63,7 +63,7 @@ class Games:
 
         return result
 
-    def _fix_data_type(self):
+    def _clean_games_data(self):
 
         data = self._combine_team_games()
         data['SEASON_ID'] = data['SEASON_ID'].apply(lambda x: int(x))
@@ -73,14 +73,16 @@ class Games:
 
     def get_games(self):
 
-        self.data = self._fix_data_type()
+        dataframe = self._clean_games_data()
+        return dataframe
 
     def to_csv(self):
         to_date = self.to_date.replace('/', '-')
         from_date = self.from_date.replace('/', '-')
         filepath = 'games/' + from_date + '_to_' + to_date + '.csv'
         print(filepath)
-        self.data.to_csv(filepath)
+        dataframe = self.get_games()
+        dataframe.to_csv(filepath)
 
 
 if __name__ == "__main__":
