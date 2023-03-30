@@ -6,3 +6,4 @@
 /.idea/nba-data-pipeline.iml
 /games
 /.idea/vcs.xml
+/config.py

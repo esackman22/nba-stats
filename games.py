@@ -7,7 +7,12 @@ class Games:
     """Extract games data from API and transform it to be ready for insertion into DB
     """
 
-    def __init__(self, from_date='01/01/2023', to_date='01/01/2023', season_type=SeasonTypeAllStarNullable.regular, league_id='00'):
+    def __init__(self,
+                 from_date='01/01/2023',
+                 to_date='01/01/2023',
+                 season_type=SeasonTypeAllStarNullable.regular,
+                 league_id='00'):
+
         self.from_date = from_date
         self.to_date = to_date
         self.season_type = season_type
@@ -15,6 +20,9 @@ class Games:
         self.data = pd.DataFrame()
 
     def _create_game_finder(self):
+        """Instantiates the LeagueGameFinderClass with the instance variables filled in.
+        """
+
         game_finder = leaguegamefinder.LeagueGameFinder(date_from_nullable=self.from_date,
                                                         date_to_nullable=self.to_date,
                                                         season_type_nullable=self.season_type,
@@ -22,6 +30,9 @@ class Games:
         return game_finder
 
     def _retrieve_games(self):
+        """Retrieves games from the nba_api using the game finder instance created in the
+        _create_game_finder method.
+        """
         game_finder = self._create_game_finder()
         return game_finder.get_data_frames()[0]
 
@@ -30,18 +41,18 @@ class Games:
 
                 Parameters
                 ----------
-                df : Input DataFrame.
+                self._retrieve_games() : Retrieves input DataFrame.
 
                 Returns
                 -------
                 result : DataFrame
         """
         # Join every row to all others with the same game ID.
-        games = self._retrieve_games()
+        raw_games = self._retrieve_games()
 
-        joined = pd.merge(games,
-                          games,
-                          suffixes=['_H', '_A'],
+        joined = pd.merge(raw_games,
+                          raw_games,
+                          suffixes=('_H', '_A'),
                           on=['SEASON_ID', 'GAME_ID', 'GAME_DATE'])
 
         # Filter out any row that is joined to itself.
@@ -76,4 +87,3 @@ if __name__ == "__main__":
     games = Games()
     games.get_games()
     games.to_csv()
-
