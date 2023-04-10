@@ -30,7 +30,11 @@ for game_id in game_ids:
     raw_plays_dfs.append(pbp.get_data_frames()[0])
     time.sleep(0.5)
 
-playbyplay = PlayByPlay(raw_plays_dfs)
+cursor.execute("SELECT MAX(play_id) FROM playbyplay")
+max_play_id = cursor.fetchall()[0][0]
+conn.commit()
+
+playbyplay = PlayByPlay(raw_plays_dfs, max_play_id)
 plays = playbyplay.get_plays()
 
 # Extract players from plays data

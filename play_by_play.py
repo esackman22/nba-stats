@@ -9,7 +9,8 @@ class PlayByPlay:
 
     columns = config.play_by_play_columns
 
-    def __init__(self, raw_plays_dfs):
+    def __init__(self, raw_plays_dfs, max_play_id):
+        self.max_play_id = max_play_id
         self.raw_plays_dfs = raw_plays_dfs
 
     def get_plays(self):
@@ -24,20 +25,9 @@ class PlayByPlay:
 
         return raw_play_by_play_data
 
-    def _retrieve_max_play_id(self):
-
-        connector = Connector()
-        conn, cursor = connector.connect()
-        cursor.execute("SELECT MAX(play_id) FROM playbyplay")
-        max_play_id = cursor.fetchall()[0][0]
-        conn.commit()
-        conn.close()
-
-        return max_play_id
-
     def _add_play_id(self):
 
-        start_id = self._retrieve_max_play_id()
+        start_id = self.max_play_id
         raw_plays = self._build_raw_dataframe()
 
         sorted_plays = raw_plays.sort_values(by=['GAME_ID', 'PERIOD'], axis=0).reset_index().drop('index', axis=1)
