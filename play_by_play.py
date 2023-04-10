@@ -1,9 +1,7 @@
 import pandas as pd
 import numpy as np
-import time
 import config
 from connect import Connector
-from nba_api.stats.endpoints import playbyplayv2
 from games import Games
 
 
@@ -11,8 +9,8 @@ class PlayByPlay:
 
     columns = config.play_by_play_columns
 
-    def __init__(self, game_ids):
-        self.game_ids = game_ids
+    def __init__(self, raw_plays_dfs):
+        self.raw_plays_dfs = raw_plays_dfs
 
     def get_plays(self):
         return self._clean_data()
@@ -21,11 +19,8 @@ class PlayByPlay:
 
         raw_play_by_play_data = pd.DataFrame(columns=self.columns)
 
-        for game_id in self.game_ids:
-            pbp = playbyplayv2.PlayByPlayV2('00' + str(game_id))
-            pbp = pbp.get_data_frames()[0]
-            raw_play_by_play_data = pd.concat([raw_play_by_play_data, pbp], ignore_index=True)
-            time.sleep(0.5)
+        for df in self.raw_plays_dfs:
+            raw_play_by_play_data = pd.concat([raw_play_by_play_data, df], ignore_index=True)
 
         return raw_play_by_play_data
 

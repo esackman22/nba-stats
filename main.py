@@ -3,6 +3,8 @@ from players import Players
 from play_by_play import PlayByPlay
 from connect import Connector
 from executor import Executor
+from nba_api.stats.endpoints import playbyplayv2
+import time
 import datetime
 
 today = datetime.date.today()
@@ -22,7 +24,13 @@ yesterdays_games_data = yesterdays_games.get_games()
 game_ids = list(yesterdays_games_data['GAME_ID'])
 
 # Retrieve play by play data from those games, sorted by game chronologically
-playbyplay = PlayByPlay(game_ids)
+raw_plays_dfs = []
+for game_id in game_ids:
+    pbp = playbyplayv2.PlayByPlayV2('00' + str(game_id))
+    raw_plays_dfs.append(pbp.get_data_frames()[0])
+    time.sleep(0.5)
+
+playbyplay = PlayByPlay(raw_plays_dfs)
 plays = playbyplay.get_plays()
 
 # Extract players from plays data
