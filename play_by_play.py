@@ -18,12 +18,7 @@ class PlayByPlay:
 
     def _build_raw_dataframe(self):
 
-        raw_play_by_play_data = pd.DataFrame(columns=self.columns)
-
-        for df in self.raw_plays_dfs:
-            raw_play_by_play_data = pd.concat([raw_play_by_play_data, df], ignore_index=True)
-
-        return raw_play_by_play_data
+        return pd.concat(self.raw_plays_dfs)
 
     def _add_play_id(self):
 

@@ -45,8 +45,15 @@ class TestPlays(unittest.TestCase):
                                        index_col=0,
                                        dtype=dtypes)
         self.test_data_5 = pd.read_csv(directory + '/test_play_by_play_data_final.csv',
-                                       index_col=0,
-                                       dtype=dtypes)
+                                       index_col=0)
+        self.test_data_5['GAME_ID'] = self.test_data_5['GAME_ID'].astype('Int64')
+        self.test_data_5['SCOREMARGIN'] = self.test_data_5['SCOREMARGIN'].astype('Int64')
+        self.test_data_5['PLAYER1_ID'] = self.test_data_5['PLAYER1_ID'].astype('Int64')
+        self.test_data_5['PLAYER2_ID'] = self.test_data_5['PLAYER2_ID'].astype('Int64')
+        self.test_data_5['PLAYER3_ID'] = self.test_data_5['PLAYER3_ID'].astype('Int64')
+        self.test_data_5['PLAYER1_TEAM_ID'] = self.test_data_5['PLAYER1_TEAM_ID'].astype('Int64')
+        self.test_data_5['PLAYER2_TEAM_ID'] = self.test_data_5['PLAYER2_TEAM_ID'].astype('Int64')
+        self.test_data_5['PLAYER3_TEAM_ID'] = self.test_data_5['PLAYER3_TEAM_ID'].astype('Int64')
 
     def test_build_raw_dataframe(self):
         result = self.playbyplay._build_raw_dataframe()
