@@ -28,11 +28,8 @@ class TestPlays(unittest.TestCase):
                                  index_col=0,
                                  dtype=dtypes)
         dataframes = [self.row_1, self.row_2, self.row_3, self.row_4, self.row_5, self.row_6]
-        self.playbyplay = PlayByPlay(dataframes, 0)
+        self.playbyplay = PlayByPlay(dataframes)
         self.test_data_0 = pd.read_csv(directory + '/test_play_by_play_data.csv',
-                                       index_col=0,
-                                       dtype=dtypes)
-        self.test_data_1 = pd.read_csv(directory + '/test_play_by_play_data_with_play_id.csv',
                                        index_col=0,
                                        dtype=dtypes)
         self.test_data_2 = pd.read_csv(directory + '/test_data_zero_player_id_null.csv',
@@ -54,6 +51,7 @@ class TestPlays(unittest.TestCase):
         self.test_data_5['PLAYER1_TEAM_ID'] = self.test_data_5['PLAYER1_TEAM_ID'].astype('Int64')
         self.test_data_5['PLAYER2_TEAM_ID'] = self.test_data_5['PLAYER2_TEAM_ID'].astype('Int64')
         self.test_data_5['PLAYER3_TEAM_ID'] = self.test_data_5['PLAYER3_TEAM_ID'].astype('Int64')
+        self.test_data_5.columns = self.test_data_5.columns.str.lower()
 
     def test_build_raw_dataframe(self):
         result = self.playbyplay._build_raw_dataframe()
@@ -61,7 +59,7 @@ class TestPlays(unittest.TestCase):
         print('Build raw dataframe test passed!')
 
     def test_nullify_zero_player_id(self):
-        result = self.playbyplay._nullify_zero_player_id(self.test_data_1)
+        result = self.playbyplay._nullify_zero_player_id(self.test_data_0)
         assert_frame_equal(result, self.test_data_2)
         print('Nullify zero player ID test passed!')
 

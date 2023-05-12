@@ -41,9 +41,6 @@ class PlayByPlay:
         # 4. Fix data types
         play_by_play = self._fix_data_types(play_by_play)
 
-        # 5. Make all columns lowercase
-        play_by_play.columns = play_by_play.columns.str.lower()
-
         return play_by_play
 
     def _nullify_zero_player_id(self, plays_dataframe):
@@ -94,6 +91,8 @@ class PlayByPlay:
         plays_dataframe['PLAYER1_TEAM_ID'] = plays_dataframe['PLAYER1_TEAM_ID'].astype('Int64')
         plays_dataframe['PLAYER2_TEAM_ID'] = plays_dataframe['PLAYER2_TEAM_ID'].astype('Int64')
         plays_dataframe['PLAYER3_TEAM_ID'] = plays_dataframe['PLAYER3_TEAM_ID'].astype('Int64')
+
+        plays_dataframe.columns = plays_dataframe.columns.str.lower()
         return plays_dataframe
 
 
