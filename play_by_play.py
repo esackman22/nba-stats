@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import config
-from connect import Connector
 from games import Games
 
 
@@ -9,8 +8,7 @@ class PlayByPlay:
 
     columns = config.play_by_play_columns
 
-    def __init__(self, raw_plays_dfs, max_play_id):
-        self.max_play_id = max_play_id
+    def __init__(self, raw_plays_dfs):
         self.raw_plays_dfs = raw_plays_dfs
 
     def get_plays(self):
@@ -20,21 +18,9 @@ class PlayByPlay:
 
         return pd.concat(self.raw_plays_dfs)
 
-    def _add_play_id(self):
-
-        start_id = self.max_play_id
-        raw_plays = self._build_raw_dataframe()
-
-        sorted_plays = raw_plays.sort_values(by=['GAME_ID', 'PERIOD'], axis=0).reset_index().drop('index', axis=1)
-        length = len(sorted_plays)
-        play_id = [x + start_id for x in range(1, length + 1)]
-        sorted_plays.insert(0, 'PLAY_ID', play_id)
-
-        return sorted_plays
-
     def _clean_data(self):
 
-        play_by_play = self._add_play_id()
+        play_by_play = self._build_raw_dataframe()
 
         """
         DATA CLEANING: There is a lot of messy data in the playbyplay dataframe that needs to be cleaned to ensure inserted data meets foreign key constraints
@@ -54,6 +40,9 @@ class PlayByPlay:
 
         # 4. Fix data types
         play_by_play = self._fix_data_types(play_by_play)
+
+        # 5. Make all columns lowercase
+        play_by_play.columns = play_by_play.columns.str.lower()
 
         return play_by_play
 

@@ -1,7 +1,6 @@
 from nba_api.stats.endpoints import leaguegamefinder
 from nba_api.stats.library.parameters import SeasonTypeAllStarNullable
 import pandas as pd
-from connect import Connector
 
 
 class Games:
@@ -68,6 +67,7 @@ class Games:
         data = self._combine_team_games()
         data['SEASON_ID'] = data['SEASON_ID'].apply(lambda x: int(x))
         data['GAME_ID'] = data['GAME_ID'].apply(lambda x: int(x))
+        data.columns = data.columns.str.lower()
 
         return data
 

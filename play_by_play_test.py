@@ -8,7 +8,7 @@ from config import dtypes
 class TestPlays(unittest.TestCase):
 
     def setUp(self) -> None:
-        directory = 'test_data'
+        directory = 'test_directory'
         self.row_1 = pd.read_csv(directory + '/row_1.csv',
                                  index_col=0,
                                  dtype=dtypes)
@@ -59,11 +59,6 @@ class TestPlays(unittest.TestCase):
         result = self.playbyplay._build_raw_dataframe()
         assert_frame_equal(result, self.test_data_0)
         print('Build raw dataframe test passed!')
-
-    def test_add_play_id(self):
-        result = self.playbyplay._add_play_id()
-        assert_frame_equal(result, self.test_data_1)
-        print('Add play ID test passed!')
 
     def test_nullify_zero_player_id(self):
         result = self.playbyplay._nullify_zero_player_id(self.test_data_1)
