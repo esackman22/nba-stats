@@ -18,7 +18,7 @@ if raw_plays_dfs:
     players_to_add = retrieve_and_return_players_to_add(engine, final_plays_df)
 
     # Write data to DB
-    write_data_to_sql(players_to_add, final_games_df, final_plays_df)
+    write_data_to_sql(players_to_add, final_games_df, final_plays_df, engine)
 else:
     print(f'There were no games on {from_date}.\n')
 
