@@ -11,7 +11,7 @@ class PlayByPlay:
     def __init__(self, raw_plays_dfs):
         self.raw_plays_dfs = raw_plays_dfs
 
-    def get_plays(self):
+    def clean_and_return_plays(self):
         return self._clean_data()
 
     def _build_raw_dataframe(self):

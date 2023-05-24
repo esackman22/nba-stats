@@ -79,7 +79,7 @@ class TestPlays(unittest.TestCase):
         print('Fix data types test passed!')
 
     def test_clean_data(self):
-        result = self.playbyplay.get_plays()
+        result = self.playbyplay.clean_and_return_plays()
         assert_frame_equal(result, self.test_data_5)
         print('Get plays dataframe test passed!')
 
