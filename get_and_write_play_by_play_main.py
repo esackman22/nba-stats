@@ -1,8 +1,6 @@
 from models import engine
-from extract_raw_games_and_pbp_data import retrieve_and_return_raw_games_and_pbp_dfs
-from clean_and_return_games_and_pbp_data import clean_and_return_games_and_pbp_dfs
-from retrieve_players_to_add_to_db_from_pbp import retrieve_and_return_players_to_add
-from write_data_to_db import write_data_to_sql
+from get_and_write_play_by_play import clean_and_return_games_and_pbp_dfs, retrieve_and_return_raw_games_and_pbp_dfs, \
+    retrieve_and_return_players_to_add, write_data_to_sql
 import datetime
 
 from_date = to_date = (datetime.date.today() - datetime.timedelta(days=1)).strftime('%m/%d/%Y')
