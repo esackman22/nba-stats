@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from play_by_play import PlayByPlay
 from games import Games
+from constants import player2_name, player1_id, player2_id, player1_name, player3_id, player3_name
 
 
 class PlayerComparator:
@@ -17,11 +18,8 @@ class PlayerComparator:
 
         if len(ids_to_add) > 0:
             players_to_add = updated[updated['id'].isin(ids_to_add)]
-            print(f'There are {len(ids_to_add)} new players to add to the database.')
-            print(players_to_add)
             return players_to_add
         else:
-            print('There are no players to add to the database.')
             return pd.DataFrame()
 
     def extract_players_from_pbp(self, play_by_play_dataframe):
@@ -54,11 +52,11 @@ class PlayerComparator:
 
         for player_id in unique_ids:
 
-            if len(pbp[pbp['player1_id'] == player_id]['player1_name'].unique()) == 1:
+            if len(pbp[pbp[player1_id] == player_id][player1_name].unique()) == 1:
                 full_name, first_name, last_name = self._extract_player_name(player_id, 1, pbp)
-            elif len(pbp[pbp['player2_id'] == player_id]['player2_name'].unique()) == 1:
+            elif len(pbp[pbp[player2_id] == player_id][player2_name].unique()) == 1:
                 full_name, first_name, last_name = self._extract_player_name(player_id, 2, pbp)
-            elif len(pbp[pbp['player3_id'] == player_id]['player3_name'].unique()) == 1:
+            elif len(pbp[pbp[player3_id] == player_id][player3_name].unique()) == 1:
                 full_name, first_name, last_name = self._extract_player_name(player_id, 3, pbp)
             else:
                 continue

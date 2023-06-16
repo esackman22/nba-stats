@@ -2,7 +2,7 @@ import unittest
 from pandas.testing import assert_frame_equal
 import pandas as pd
 from play_by_play import PlayByPlay
-from config import dtypes
+from constants import dtypes
 
 
 class TestPlays(unittest.TestCase):
@@ -56,32 +56,26 @@ class TestPlays(unittest.TestCase):
     def test_build_raw_dataframe(self):
         result = self.playbyplay._build_raw_dataframe()
         assert_frame_equal(result, self.test_data_0)
-        print('Build raw dataframe test passed!')
 
     def test_nullify_zero_player_id(self):
         result = self.playbyplay._nullify_zero_player_id(self.test_data_0)
         assert_frame_equal(result, self.test_data_2)
-        print('Nullify zero player ID test passed!')
 
     def test_move_team_id_to_correct_column(self):
         result = self.playbyplay._move_team_id_to_correct_column(self.test_data_2)
         assert_frame_equal(result, self.test_data_3)
-        print('Move team ID test passed!')
 
     def test_nullify_empty_player_names(self):
         result = self.playbyplay._nullify_empty_player_names(self.test_data_3)
         assert_frame_equal(result, self.test_data_4)
-        print('Nullify empty player names test passed!')
 
     def test_fix_data_types(self):
         result = self.playbyplay._fix_data_types(self.test_data_4)
         assert_frame_equal(result, self.test_data_5)
-        print('Fix data types test passed!')
 
     def test_clean_data(self):
         result = self.playbyplay.clean_and_return_plays()
         assert_frame_equal(result, self.test_data_5)
-        print('Get plays dataframe test passed!')
 
 
 if __name__ == "__main__":

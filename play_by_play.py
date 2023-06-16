@@ -1,24 +1,22 @@
 import pandas as pd
 import numpy as np
 import config
+import constants
 from games import Games
 
 
 class PlayByPlay:
 
-    columns = config.play_by_play_columns
+    columns = constants.play_by_play_columns
 
     def __init__(self, raw_plays_dfs):
         self.raw_plays_dfs = raw_plays_dfs
-
-    def clean_and_return_plays(self):
-        return self._clean_data()
 
     def _build_raw_dataframe(self):
 
         return pd.concat(self.raw_plays_dfs)
 
-    def _clean_data(self):
+    def clean_and_return_plays(self):
 
         play_by_play = self._build_raw_dataframe()
 
@@ -51,7 +49,7 @@ class PlayByPlay:
 
         def move_team_id_if_in_player_column(row):
 
-            team_ids = config.TEAMS
+            team_ids = constants.TEAMS
 
             if row.PLAYER1_ID in team_ids:
                 row.PLAYER1_TEAM_ID = row.PLAYER1_ID

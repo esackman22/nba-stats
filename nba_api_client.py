@@ -12,8 +12,6 @@ class NbaApiClient:
         self.to_date = to_date
         self.from_date = from_date
 
-    def retrieve_and_return_games_df(self):
-        return self._retrieve_games()
 
     def _create_game_finder(self):
 
@@ -23,7 +21,7 @@ class NbaApiClient:
                                                         league_id_nullable=self.league_id)
         return game_finder
 
-    def _retrieve_games(self):
+    def retrieve_games(self):
 
         game_finder = self._create_game_finder()
         return game_finder.get_data_frames()[0]
