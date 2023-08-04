@@ -1,4 +1,5 @@
 import pandas as pd
+from constants import game_id, season_id, game_date
 
 
 class Games:
@@ -26,7 +27,7 @@ class Games:
         joined = pd.merge(raw_games,
                           raw_games,
                           suffixes=('_H', '_A'),
-                          on=['SEASON_ID', 'GAME_ID', 'GAME_DATE'])
+                          on=[season_id, game_id, game_date])
 
         # Filter out any row that is joined to itself.
         result = joined[joined.TEAM_ID_H != joined.TEAM_ID_A]

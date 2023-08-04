@@ -24,3 +24,7 @@ player3_id = 'player3_id'
 player1_name = 'player1_name'
 player2_name = 'player2_name'
 player3_name = 'player3_name'
+
+game_id = 'GAME_ID'
+season_id = 'SEASON_ID'
+game_date = 'GAME_DATE'
