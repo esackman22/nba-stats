@@ -1,12 +1,12 @@
 import pandas as pd
 import numpy as np
-import constants
-from games import Games
+from constants import play_by_play_columns, player1_id, player1_name, player1_team_id, \
+    player2_id, player2_name, player2_team_id, player3_id, player3_name, player3_team_id, game_id, TEAMS, scoremargin
 
 
 class PlayByPlay:
 
-    columns = constants.play_by_play_columns
+    columns = play_by_play_columns
 
     def __init__(self, raw_plays_dfs):
         self.raw_plays_dfs = raw_plays_dfs
@@ -21,16 +21,19 @@ class PlayByPlay:
         play_by_play = self._build_raw_dataframe()
 
         """
-        DATA CLEANING: There is a lot of messy data in the playbyplay dataframe that needs to be cleaned to ensure inserted data meets foreign key constraints
+        DATA CLEANING: There is a lot of messy data in the playbyplay dataframe that needs to be cleaned to ensure 
+        inserted data meets foreign key constraints
         1. Where player ID is 0, set to null (player1_id, player2_id, player3_id)
-        2. Where player ID is actually a team ID (cross reference teams table), set player ID to null and move ID to team_id column (player1_id... player1_team_id...)
+        2. Where player ID is actually a team ID (cross reference teams table), set player ID to null and move ID to 
+        team_id column (player1_id... player1_team_id...)
         3. Where player ID is a value but name is null set player id to null.
         4. Fix data types so when inserted into Postgres it's done correctly
         """
         # 1. Where player ID is 0, set to null (player1_id, player2_id, player3_id)
         play_by_play = self._nullify_zero_player_id(play_by_play)
 
-        # 2. Where player ID is actually a team ID (cross reference teams table), set player ID to null and move ID to team_id column (player1_id... player1_team_id...)
+        # 2. Where player ID is actually a team ID (cross-reference teams table), set player ID to
+        # null and move ID to team_id column (player1_id... player1_team_id...)
         play_by_play = self._move_team_id_to_correct_column(play_by_play)
 
         # 3. Where player ID is a value but name is null set player id to null.
@@ -45,7 +48,10 @@ class PlayByPlay:
         """Looks for instances of a player ID value set to zero and changes it to null to avoid foreign key constraint
         issues."""
 
-        plays_dataframe = plays_dataframe.replace(to_replace={'PLAYER1_ID': 0, 'PLAYER2_ID': 0, 'PLAYER3_ID': 0}, value=np.nan)
+        plays_dataframe = plays_dataframe.replace(to_replace={player1_id.upper(): 0,
+                                                              player2_id.upper(): 0,
+                                                              player3_id.upper(): 0},
+                                                  value=np.nan)
         return plays_dataframe
 
     def _move_team_id_to_correct_column(self, plays_dataframe):
@@ -54,7 +60,7 @@ class PlayByPlay:
 
         def move_team_id_if_in_player_column(row):
 
-            team_ids = constants.TEAMS
+            team_ids = TEAMS
 
             if row.PLAYER1_ID in team_ids:
                 row.PLAYER1_TEAM_ID = row.PLAYER1_ID
@@ -78,39 +84,26 @@ class PlayByPlay:
         player ID appear in the play by play data. However, when this happens, the player name is not
         usually reported, which can cause confusion. In this instance, the player ID in question is set to null."""
 
-        plays_dataframe.loc[plays_dataframe['PLAYER1_NAME'].isnull(), 'PLAYER1_ID'] = np.nan
-        plays_dataframe.loc[plays_dataframe['PLAYER2_NAME'].isnull(), 'PLAYER2_ID'] = np.nan
-        plays_dataframe.loc[plays_dataframe['PLAYER3_NAME'].isnull(), 'PLAYER3_ID'] = np.nan
+        plays_dataframe.loc[plays_dataframe[player1_name.upper()].isnull(), player1_id.upper()] = np.nan
+        plays_dataframe.loc[plays_dataframe[player2_name.upper()].isnull(), player2_id.upper()] = np.nan
+        plays_dataframe.loc[plays_dataframe[player3_name.upper()].isnull(), player3_id.upper()] = np.nan
         return plays_dataframe
 
     def _fix_data_types(self, plays_dataframe):
         """Fixes all data types before inserting into the database."""
 
-        plays_dataframe['GAME_ID'] = plays_dataframe['GAME_ID'].astype('Int64')
+        plays_dataframe[game_id] = plays_dataframe[game_id].astype('Int64')
 
-        plays_dataframe = plays_dataframe.replace(to_replace={'SCOREMARGIN': 'TIE'}, value='0')
-        plays_dataframe['SCOREMARGIN'] = plays_dataframe['SCOREMARGIN'].astype('Int64')
+        plays_dataframe = plays_dataframe.replace(to_replace={scoremargin: 'TIE'}, value='0')
+        plays_dataframe[scoremargin] = plays_dataframe[scoremargin].astype('Int64')
 
-        plays_dataframe['PLAYER1_ID'] = plays_dataframe['PLAYER1_ID'].astype('Int64')
-        plays_dataframe['PLAYER2_ID'] = plays_dataframe['PLAYER2_ID'].astype('Int64')
-        plays_dataframe['PLAYER3_ID'] = plays_dataframe['PLAYER3_ID'].astype('Int64')
+        plays_dataframe[player1_id.upper()] = plays_dataframe[player1_id.upper()].astype('Int64')
+        plays_dataframe[player2_id.upper()] = plays_dataframe[player2_id.upper()].astype('Int64')
+        plays_dataframe[player3_id.upper()] = plays_dataframe[player3_id.upper()].astype('Int64')
 
-        plays_dataframe['PLAYER1_TEAM_ID'] = plays_dataframe['PLAYER1_TEAM_ID'].astype('Int64')
-        plays_dataframe['PLAYER2_TEAM_ID'] = plays_dataframe['PLAYER2_TEAM_ID'].astype('Int64')
-        plays_dataframe['PLAYER3_TEAM_ID'] = plays_dataframe['PLAYER3_TEAM_ID'].astype('Int64')
+        plays_dataframe[player1_team_id.upper()] = plays_dataframe[player1_team_id.upper()].astype('Int64')
+        plays_dataframe[player2_team_id.upper()] = plays_dataframe[player2_team_id.upper()].astype('Int64')
+        plays_dataframe[player3_team_id.upper()] = plays_dataframe[player3_team_id.upper()].astype('Int64')
 
         plays_dataframe.columns = plays_dataframe.columns.str.lower()
         return plays_dataframe
-
-
-
-
-if __name__ == "__main__":
-    games = Games()
-    game_ids = list(games.get_games()['GAME_ID'])
-    print(game_ids)
-    playbyplay = PlayByPlay(game_ids)
-    plays = playbyplay.get_plays()
-    print(plays.head())
-    print(plays.info())
-    print(plays.describe())

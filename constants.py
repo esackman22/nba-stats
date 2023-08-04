@@ -9,6 +9,7 @@ play_by_play_columns = ['GAME_ID', 'EVENTNUM', 'EVENTMSGTYPE', 'EVENTMSGACTIONTY
                         'PLAYER3_TEAM_NICKNAME', 'PLAYER3_TEAM_ABBREVIATION',
                         'VIDEO_AVAILABLE_FLAG']
 
+players_columns = ['id', 'full_name', 'first_name', 'last_name', 'is_active']
 TEAMS = [1610612737, 1610612738, 1610612739, 1610612740, 1610612741, 1610612742, 1610612743, 1610612744, 1610612745,
          1610612746, 1610612747, 1610612748, 1610612749, 1610612750, 1610612751, 1610612752, 1610612753, 1610612754,
          1610612755, 1610612756, 1610612757, 1610612758, 1610612759, 1610612760, 1610612761, 1610612762, 1610612763,
@@ -24,7 +25,11 @@ player3_id = 'player3_id'
 player1_name = 'player1_name'
 player2_name = 'player2_name'
 player3_name = 'player3_name'
+player1_team_id = 'player1_team_id'
+player2_team_id = 'player2_team_id'
+player3_team_id = 'player3_team_id'
 
 game_id = 'GAME_ID'
 season_id = 'SEASON_ID'
 game_date = 'GAME_DATE'
+scoremargin = 'SCOREMARGIN'

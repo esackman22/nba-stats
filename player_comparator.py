@@ -1,8 +1,6 @@
 import pandas as pd
 import numpy as np
-from play_by_play import PlayByPlay
-from games import Games
-from constants import player2_name, player1_id, player2_id, player1_name, player3_id, player3_name
+from constants import player2_name, player1_id, player2_id, player1_name, player3_id, player3_name, players_columns
 
 
 class PlayerComparator:
@@ -11,7 +9,7 @@ class PlayerComparator:
     and compares it to existing players. If there are new players in the play by play data, the object will return
     a dataframe containing their info to write to the database."""
 
-    columns = ['id', 'full_name', 'first_name', 'last_name', 'is_active']
+    columns = players_columns
 
     def compare_to_existing(self, existing_players_dataframe, play_by_play_dataframe):
         """Compares existing players dataframe to to players extracted from play by play data.
@@ -46,7 +44,7 @@ class PlayerComparator:
 
         pbp = play_by_play_dataframe
         unique_player_ids = set()
-        player_ids = np.append(pbp['player1_id'].unique(), np.append(pbp['player2_id'].unique(), pbp['player3_id'].unique()))
+        player_ids = np.append(pbp[player1_id].unique(), np.append(pbp[player2_id].unique(), pbp[player3_id].unique()))
 
         for player_id in player_ids:
 
