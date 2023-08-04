@@ -90,14 +90,3 @@ class PlayerComparator:
             last_name = full_name.split(' ', 1)[1]
 
         return full_name, first_name, last_name
-
-
-
-if __name__ == "__main__":
-
-    players = Players()
-    games = Games()
-    game_ids = list(games.get_games()["GAME_ID"])
-    playbyplay = PlayByPlay(game_ids)
-    plays = playbyplay.get_plays()
-    print(players.compare_to_existing(plays))
