@@ -2,9 +2,10 @@ from models import Plays, Players, Teams, Games, engine
 from sqlalchemy.orm import sessionmaker
 import json
 
-
+# Initialize the database connection
 Session = sessionmaker(bind=engine)
 
+# Map columns to query parameters to allow for dynamic query building
 column_mappings = {
     'game_id': Plays.game_id,
     'eventmsgtype': Plays.eventmsgtype,
@@ -23,7 +24,10 @@ column_mappings = {
     'player3_team_nickname': Plays.player3_team_nickname
 }
 
+
 def validate_query_params(query_params):
+    """Input a dictionary of query parameters, output is None if all are valid or
+    a tuple of the parameter and its corresponding value if it returns no results."""
 
     session = Session()
     query = session.query(Plays)
@@ -45,7 +49,10 @@ def validate_query_params(query_params):
 
     return None
 
+
 def build_query_with_filters(query_params, limit=None):
+    """Input a dictionary with query parameters and a limit on results if necessary,
+    output a list of SQLalchemy objects that are the results of the query."""
 
     session = Session()
     query = session.query(Plays)
@@ -65,6 +72,8 @@ def build_query_with_filters(query_params, limit=None):
 
 
 def convert_to_json(query_results):
+    """Input query results in the form of a list of SQLalchemy objects,
+    output the results in JSON format."""
 
     result_list = []
     for item in query_results:

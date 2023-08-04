@@ -37,6 +37,8 @@ class Games:
         return result
 
     def _clean_games_data(self):
+        """Combines home and away rows for a game into a single row and converts season and game
+        ID columns to integer. Also makes column names all lowercase."""
 
         data = self._combine_team_games()
         data['SEASON_ID'] = data['SEASON_ID'].apply(lambda x: int(x))

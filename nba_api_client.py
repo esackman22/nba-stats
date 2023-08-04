@@ -14,6 +14,8 @@ class NbaApiClient:
 
 
     def _create_game_finder(self):
+        """Initializes the game finder object from the NBA api using the date range specified.
+        Default setting for season and league is NBA regular season."""
 
         game_finder = leaguegamefinder.LeagueGameFinder(date_from_nullable=self.from_date,
                                                         date_to_nullable=self.to_date,
@@ -22,11 +24,15 @@ class NbaApiClient:
         return game_finder
 
     def retrieve_games(self):
+        """Creates the game finder object and then retrieves data frames from it using the built in
+        get data frames method."""
 
         game_finder = self._create_game_finder()
         return game_finder.get_data_frames()[0]
 
     def retrieve_and_return_plays_dfs(self, game_ids):
+        """Iterates over a list of game ID's to retrieve raw play by play data from the playbyplayv2 endpoint,
+        then retrieves the data frame of plays and appends to a list of raw dataframes for later processing."""
 
         raw_plays_dfs = []
         if game_ids:

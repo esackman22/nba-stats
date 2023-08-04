@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import config
 import constants
 from games import Games
 
@@ -13,6 +12,7 @@ class PlayByPlay:
         self.raw_plays_dfs = raw_plays_dfs
 
     def _build_raw_dataframe(self):
+        """Concatenates the raw plays dataframes passed into the object into a single dataframe for processing."""
 
         return pd.concat(self.raw_plays_dfs)
 
@@ -42,10 +42,15 @@ class PlayByPlay:
         return play_by_play
 
     def _nullify_zero_player_id(self, plays_dataframe):
+        """Looks for instances of a player ID value set to zero and changes it to null to avoid foreign key constraint
+        issues."""
+
         plays_dataframe = plays_dataframe.replace(to_replace={'PLAYER1_ID': 0, 'PLAYER2_ID': 0, 'PLAYER3_ID': 0}, value=np.nan)
         return plays_dataframe
 
     def _move_team_id_to_correct_column(self, plays_dataframe):
+        """In certain instances, like a turnover credited to a team, a team ID might show up in a player ID column.
+        This can cause foreign key constraint issues, and the team ID must be moved to the correct column."""
 
         def move_team_id_if_in_player_column(row):
 
@@ -69,6 +74,9 @@ class PlayByPlay:
         return plays_dataframe
 
     def _nullify_empty_player_names(self, plays_dataframe):
+        """In rare cases, coaches or referees who may be retired players still tracked in the database have their
+        player ID appear in the play by play data. However, when this happens, the player name is not
+        usually reported, which can cause confusion. In this instance, the player ID in question is set to null."""
 
         plays_dataframe.loc[plays_dataframe['PLAYER1_NAME'].isnull(), 'PLAYER1_ID'] = np.nan
         plays_dataframe.loc[plays_dataframe['PLAYER2_NAME'].isnull(), 'PLAYER2_ID'] = np.nan
@@ -76,6 +84,7 @@ class PlayByPlay:
         return plays_dataframe
 
     def _fix_data_types(self, plays_dataframe):
+        """Fixes all data types before inserting into the database."""
 
         plays_dataframe['GAME_ID'] = plays_dataframe['GAME_ID'].astype('Int64')
 
