@@ -1,4 +1,5 @@
 import pandas as pd
+from constants import game_id, season_id, game_date
 
 
 class Games:
@@ -26,7 +27,7 @@ class Games:
         joined = pd.merge(raw_games,
                           raw_games,
                           suffixes=('_H', '_A'),
-                          on=['SEASON_ID', 'GAME_ID', 'GAME_DATE'])
+                          on=[season_id, game_id, game_date])
 
         # Filter out any row that is joined to itself.
         result = joined[joined.TEAM_ID_H != joined.TEAM_ID_A]
@@ -37,6 +38,8 @@ class Games:
         return result
 
     def _clean_games_data(self):
+        """Combines home and away rows for a game into a single row and converts season and game
+        ID columns to integer. Also makes column names all lowercase."""
 
         data = self._combine_team_games()
         data['SEASON_ID'] = data['SEASON_ID'].apply(lambda x: int(x))
